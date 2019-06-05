@@ -1,0 +1,41 @@
+@model Usuarios.Models.UsuarioModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Nueva suscripción</h2>
+
+
+@using (Html.BeginForm("Index", "Usuario", FormMethod.Post)) { 
+<div class="form-group">
+    @Html.LabelFor(k => k.Nombre)
+    @Html.TextBoxFor(k => k.Nombre, new { @class = "form-control" })
+    @Html.ValidationMessageFor(k => k.Nombre," ", new { @class = "form-text text-danger" })
+</div>
+
+
+<div class="form-group">
+    @Html.LabelFor(k => k.Email)
+    @Html.TextBoxFor(k => k.Email, new { @class = "form-control" })
+    @Html.ValidationMessageFor(k=>k.Email,"", new { @class = "form-text text-danger" })
+</div>
+
+
+<div class="form-group">
+    @Html.LabelFor(k => k.Pais)
+    @Html.DropDownListFor(k=>k.Pais, (IEnumerable<SelectListItem>)ViewBag.MisPaises, new { @class = "form-control" })
+    @Html.ValidationMessageFor(k => k.Pais, "", new { @class = "form-text text-danger" })
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(k => k.Genero)
+    Masculino @Html.RadioButtonFor(k => k.Genero, "M")
+    Femenino @Html.RadioButtonFor(k => k.Genero, "F")
+    @Html.ValidationMessageFor(k => k.Genero, "", new { @class = "form-text text-danger" })
+</div>
+
+<div class="form-group">
+    <button class="btn btn-success" type="submit">Suscribete!!</button>
+</div>
+
+}

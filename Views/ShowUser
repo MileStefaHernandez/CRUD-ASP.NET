@@ -1,0 +1,28 @@
+@model Usuarios.Models.UsuarioModel
+@{
+    ViewBag.Title = "MostrarUsuarios";
+}
+
+<h2>Usuarios</h2>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Pais</th>
+            <th>Genero</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model.Lista)
+        {
+            <tr>
+                <td>@Html.DisplayFor(x=>item.Nombre)</td>
+                <td>@Html.DisplayFor(y=>item.Email)</td>
+                <td>@Html.DisplayFor(p=>item.Pais)</td>
+                <td>@Html.DisplayFor(g=>item.Genero)</td>
+            </tr>
+        }
+    </tbody>
+</table>

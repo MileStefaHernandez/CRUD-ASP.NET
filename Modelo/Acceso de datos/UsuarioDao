@@ -1,0 +1,51 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using Usuarios.Models.DataModel;
+
+namespace Usuarios.Models.DataAccess
+{
+    public class UsuarioDao
+    {
+
+        public void Crear(UsuarioModel u)
+        {
+            using (var contexto=new UsuariosEntities())
+            {
+                Usuario us = new Usuario();
+                us.Nombre = u.Nombre;
+                us.Pais = u.Pais;
+                us.Email = u.Email;
+                us.Genero = u.Genero;
+
+                contexto.Usuario.Add(us);
+                contexto.SaveChanges();
+            }
+        }
+
+
+        public List<UsuarioModel> Consultar()
+        {
+            List<UsuarioModel> resultado = new List<UsuarioModel>();
+
+            using (var contexto = new UsuariosEntities())
+            {
+                var resultadoconsulta = (from d in contexto.Usuario select d).ToList();
+                foreach(var item in resultadoconsulta)
+                {
+                    UsuarioModel x = new UsuarioModel();
+                    x.Nombre = item.Nombre;
+                    x.Pais = item.Pais1.Nom_Pais;
+                    x.Email = item.Email;
+                    x.Genero = item.Genero1.Nombre;
+
+                    resultado.Add(x);
+                }
+            }
+
+
+                return resultado;
+        }
+    }
+}

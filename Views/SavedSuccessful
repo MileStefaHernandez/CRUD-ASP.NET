@@ -1,0 +1,8 @@
+@model Usuarios.Models.UsuarioModel
+@{
+    ViewBag.Title = "GuardadoExitoso";
+}
+
+<h2>Gracias por registrarse con Nosotros</h2>
+<br />
+<a href="/Usuario/MostrarUsuarios" class="btn btn-primary btn-lg">Ver lista de Usuarios &raquo;</a>

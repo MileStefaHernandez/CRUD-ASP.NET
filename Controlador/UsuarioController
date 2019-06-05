@@ -1,0 +1,57 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using Usuarios.Models;
+
+namespace Usuarios.Controllers
+{
+    public class UsuarioController : Controller
+    {
+        // GET: Usuario
+        public ActionResult Index()
+        {
+            List<SelectListItem> PaisesRenderizar = new List<SelectListItem>();
+            PaisModel mipaisx = new PaisModel();
+            var listaPaises=mipaisx.ObtenerPaises();
+            foreach(var item in listaPaises)
+            {
+                SelectListItem i = new SelectListItem();
+                i.Text = item.Nombre;
+                i.Value = item.Codigo;
+                PaisesRenderizar.Add(i);
+            }
+
+            ViewBag.MisPaises = PaisesRenderizar;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Index(UsuarioModel usuarioModel)
+        {
+            if (ModelState.IsValid) { 
+                usuarioModel.GuardarUsuario();
+                //vamos a llamar a la pantalla de exito
+                return RedirectToAction("GuardadoExitoso");
+            }
+            else
+            {
+                return View(usuarioModel);
+            }
+
+        }
+
+        public ActionResult GuardadoExitoso()
+        {
+            return View();
+        }
+
+        public ActionResult MostrarUsuarios()
+        {
+            UsuarioModel usu = new UsuarioModel();
+            usu.Lista = usu.ObtenerUsuarios();
+            return View(usu);
+        }
+    }
+}

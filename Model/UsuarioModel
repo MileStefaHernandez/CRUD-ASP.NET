@@ -1,53 +1,74 @@
+using Registro.Models.DataAccess;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-using System.ComponentModel.DataAnnotations;
-using Usuarios.Models.DataAccess;
 
-namespace Usuarios.Models
+namespace Registro.Models
 {
     public class UsuarioModel
     {
-        [Display (Name = "Nombre completo")]
-        [StringLength (maximumLength: 50)]
-        public string Nombre { get; set; }
-        [Display (Name = "Correo Electrónico")]
-        [StringLength(maximumLength: 60, MinimumLength = 10)]
-        [DataType (dataType:DataType.EmailAddress)]
-        [EmailAddress]
+        [Required(ErrorMessage = "Debes ingresar un Correo Electronico")]
+        [DataType(DataType.EmailAddress)]
+        [EmailAddress(ErrorMessage = "No parece un correo")]
+        [StringLength(50, ErrorMessage = "Tu correo electronico no puede superar 50 caracteres")]
+        [Display(Name ="Correo Electronico")]
         public string Email { get; set; }
-        [StringLength(maximumLength: 30)]
-        [Display (Name = "País de Origen")]
+
+        [Required]
+        [StringLength(100, ErrorMessage = "Tu nombre no puede superar 100 caracteres")]
+        [Display(Name ="Nombre Completo")]
+        public string Nombre { get; set; }
+
+        [Display(Name = "Pais de Origen")]
         public string Pais { get; set; }
-        [Display (Name = "Sexo")]
+
+        [Display(Name = "Sexo")]
         public string Genero { get; set; }
 
-        public List<UsuarioModel> Lista { get; set; }
+        public List<UsuarioModel> Usuarios { get; set; }
 
-        /// <summary>
-        /// Esta operacion permitira guardar usarios en una base de datos.
-        /// </summary>
-        public void GuardarUsuario() {
-            //1. instanciar el dao
-            UsuarioDao xyz = new UsuarioDao();
-            //2. incluir validaciones
+        public decimal Id { get; set; }
 
-            //3. invocar al metodo guardar
-            xyz.Crear(this);
+        public void Guardar()
+        {
+            //1. Instanciar al Dao
+            UsuarioDao usuarioDao = new UsuarioDao();
+            //1.1 Incluir validaciones personalizadas
+            //2. Invocar al metodo crear
+            usuarioDao.Crear(this);
+            return;
         }
 
-        /// <summary>
-        /// este método consulta todos los usuarios desde base de datos
-        /// </summary>
-        /// <returns></returns>
-        public List<UsuarioModel> ObtenerUsuarios()
+        public List<UsuarioModel> ConsultarUsuarios()
         {
-            //1. instanciar el dao
-            UsuarioDao dao = new UsuarioDao();
-            //2. incluir validaciones
-            //3. retornar el listado de usuarios desde el dao
-            return dao.Consultar();
+            //1. Instanciar al Dao
+            UsuarioDao usuarioDao = new UsuarioDao();
+            //2. Invocar al Dao
+            List<UsuarioModel> resultados = usuarioDao.Consultar();
+            //3. Incluir validaciones de negocio
+            //4. Retornar el lsitado
+            return resultados;
+        }
+
+        public void ActualizarUsuario()
+        {
+            UsuarioDao usuarioDao = new UsuarioDao();
+            usuarioDao.Actualizar(this);
+        }
+
+        public void EliminarUsuario()
+        {
+            UsuarioDao usuarioDao = new UsuarioDao();
+            usuarioDao.Eliminar(this);
+        }
+
+        public UsuarioModel ObtenerUsuario(decimal Id)
+        {
+            UsuarioDao usuarioDao = new UsuarioDao();
+            return usuarioDao.ObtenerUsuario(Id);
         }
     }
 }
+

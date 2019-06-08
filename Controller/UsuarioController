@@ -1,45 +1,35 @@
+using Registro.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Usuarios.Models;
 
-namespace Usuarios.Controllers
+namespace Registro.Controllers
 {
     public class UsuarioController : Controller
     {
         // GET: Usuario
         public ActionResult Index()
         {
-            List<SelectListItem> PaisesRenderizar = new List<SelectListItem>();
-            PaisModel mipaisx = new PaisModel();
-            var listaPaises=mipaisx.ObtenerPaises();
-            foreach(var item in listaPaises)
-            {
-                SelectListItem i = new SelectListItem();
-                i.Text = item.Nombre;
-                i.Value = item.Codigo;
-                PaisesRenderizar.Add(i);
-            }
-
-            ViewBag.MisPaises = PaisesRenderizar;
+            DevolverPaises();
             return View();
         }
 
         [HttpPost]
         public ActionResult Index(UsuarioModel usuarioModel)
         {
-            if (ModelState.IsValid) { 
-                usuarioModel.GuardarUsuario();
-                //vamos a llamar a la pantalla de exito
+            DevolverPaises();
+            if (ModelState.IsValid)
+            {
+                usuarioModel.Guardar();
                 return RedirectToAction("GuardadoExitoso");
             }
             else
             {
-                return View(usuarioModel);
+                return View();
             }
-
+            
         }
 
         public ActionResult GuardadoExitoso()
@@ -47,11 +37,68 @@ namespace Usuarios.Controllers
             return View();
         }
 
-        public ActionResult MostrarUsuarios()
+        public ActionResult Modificar(decimal Id)
         {
+            DevolverPaises();
             UsuarioModel usu = new UsuarioModel();
-            usu.Lista = usu.ObtenerUsuarios();
+            usu = usu.ObtenerUsuario(Id);
             return View(usu);
         }
+
+        public ActionResult ObtenerUsuarios()
+        {
+            UsuarioModel usuarioModel = new UsuarioModel();
+            usuarioModel.Usuarios = usuarioModel.ConsultarUsuarios();
+
+            return View(usuarioModel);
+        }
+
+        private void DevolverPaises()
+        {
+            PaisModel p = new PaisModel();
+            List<SelectListItem> listapaises = new List<SelectListItem>();
+
+            foreach (var e in p.ObtenerPaises())
+            {
+                SelectListItem elemento = new SelectListItem();
+                elemento.Value = e.Id;
+                elemento.Text = e.Nombre;
+                listapaises.Add(elemento);
+            }
+
+            ViewBag.Paises = listapaises;
+        }
+
+        [HttpPost]
+        public ActionResult Modificar(UsuarioModel usu)
+        {
+            if (ModelState.IsValid)
+            {
+                usu.ActualizarUsuario();
+                return RedirectToAction("GuardadoExitoso");
+            }
+            else
+            {
+                DevolverPaises();
+                return View(usu);
+            }
+            
+        }
+
+        public ActionResult Confirmacion(decimal Id)
+        {
+            ViewBag.IdEliminar = ((int)Id).ToString();
+            return View();
+        }
+
+        public ActionResult Eliminar(decimal IdEliminar)
+        {
+            UsuarioModel usu = new UsuarioModel();
+            usu.Id = IdEliminar;
+            usu.EliminarUsuario();
+            return RedirectToAction("ObtenerUsuarios");
+        }
+
     }
 }
+

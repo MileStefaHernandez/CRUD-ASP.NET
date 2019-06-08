@@ -1,53 +1,40 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.ComponentModel.DataAnnotations;
-using Usuarios.Models.DataAccess;
-
-namespace Usuarios.Models
-{
-    public class UsuarioModel
-    {
-        [Display (Name = "Nombre completo")]
-        [StringLength (maximumLength: 50)]
-        public string Nombre { get; set; }
-        [Display (Name = "Correo Electrónico")]
-        [StringLength(maximumLength: 60, MinimumLength = 10)]
-        [DataType (dataType:DataType.EmailAddress)]
-        [EmailAddress]
-        public string Email { get; set; }
-        [StringLength(maximumLength: 30)]
-        [Display (Name = "País de Origen")]
-        public string Pais { get; set; }
-        [Display (Name = "Sexo")]
-        public string Genero { get; set; }
-
-        public List<UsuarioModel> Lista { get; set; }
-
-        /// <summary>
-        /// Esta operacion permitira guardar usarios en una base de datos.
-        /// </summary>
-        public void GuardarUsuario() {
-            //1. instanciar el dao
-            UsuarioDao xyz = new UsuarioDao();
-            //2. incluir validaciones
-
-            //3. invocar al metodo guardar
-            xyz.Crear(this);
-        }
-
-        /// <summary>
-        /// este método consulta todos los usuarios desde base de datos
-        /// </summary>
-        /// <returns></returns>
-        public List<UsuarioModel> ObtenerUsuarios()
-        {
-            //1. instanciar el dao
-            UsuarioDao dao = new UsuarioDao();
-            //2. incluir validaciones
-            //3. retornar el listado de usuarios desde el dao
-            return dao.Consultar();
-        }
-    }
+@model Registro.Models.UsuarioModel
+@{
+    ViewBag.Title = "Modificar usuario";
 }
+
+<h2>Actualiza tus datos</h2>
+
+@using (Html.BeginForm("Modificar", "Usuario", FormMethod.Post))
+{
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Nombre)
+        @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "form-text text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(n => n.Email)
+        @Html.TextBoxFor(n => n.Email, new { @class = "form-control", @placeholder = "Ingresa tu nombre aqui" })
+        @Html.ValidationMessageFor(n => n.Email, "", new { @class = "form-text text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Pais)
+        @Html.DropDownListFor(m => m.Pais, (IEnumerable<SelectListItem>)ViewBag.Paises, "Selecciona tu pais", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Pais, "", new { @class = "form-text text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Genero)
+        Femenino: @Html.RadioButtonFor(x => x.Genero, "F", false)
+        Masculino: @Html.RadioButtonFor(x => x.Genero, "M", false)
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-success">Guardar cambios</button>
+    </div>
+}
+
+
